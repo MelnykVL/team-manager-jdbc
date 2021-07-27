@@ -10,6 +10,10 @@ public class Developer {
     private String lastName;
     private List<Skill> skills;
 
+    public Developer() {
+        this.skills = new ArrayList<>();
+    }
+
     public Developer(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;

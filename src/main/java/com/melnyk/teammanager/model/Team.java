@@ -7,17 +7,28 @@ public class Team {
 
     private Integer id;
     private String name;
+    private TeamStatus teamStatus;
     private List<Developer> developers;
 
-    public Team(Integer id, String name) {
-        this.id = id;
-        this.name = name;
+    public Team() {
+        this.teamStatus = TeamStatus.ACTIVE;
         this.developers = new ArrayList<>();
     }
 
-    public Team(Integer id, String name, List<Developer> developers) {
-        this.id = id;
+    public Team(String name) {
+        this();
         this.name = name;
+    }
+
+    public Team(String name, TeamStatus teamStatus) {
+        this.name = name;
+        this.teamStatus = teamStatus;
+        this.developers = new ArrayList<>();
+    }
+
+    public Team(String name, TeamStatus teamStatus, List<Developer> developers) {
+        this.name = name;
+        this.teamStatus = teamStatus;
         this.developers = developers;
     }
 
@@ -31,6 +42,14 @@ public class Team {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public TeamStatus getTeamStatus() {
+        return teamStatus;
+    }
+
+    public void setTeamStatus(TeamStatus teamStatus) {
+        this.teamStatus = teamStatus;
     }
 
     public List<Developer> getDevelopers() {
@@ -56,7 +75,9 @@ public class Team {
         return "Team{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", teamStatus=" + teamStatus +
                 ", developers=" + developers +
                 '}';
     }
+
 }
