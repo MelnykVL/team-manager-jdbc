@@ -1,0 +1,2 @@
+DROP TABLE developers_skills
+GO
