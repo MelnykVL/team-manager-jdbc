@@ -10,17 +10,6 @@ import java.util.Properties;
 
 public class ConnectionDB {
 
-    private static Properties loadPropertiesFile() {
-        Properties prop = new Properties();
-        try (InputStream in = new FileInputStream("src/main/resources/liquibase.properties")) {
-            prop.load(in);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return prop;
-    }
-
     public static Connection getConnection() {
         Connection connection = null;
         Properties prop = loadPropertiesFile();
@@ -36,10 +25,20 @@ public class ConnectionDB {
             System.out.println("!====Connection successful====!");
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
-            System.out.println("!====Connection failed====!");
         }
 
         return connection;
+    }
+
+    private static Properties loadPropertiesFile() {
+        Properties prop = new Properties();
+        try (InputStream in = new FileInputStream("src/main/resources/liquibase.properties")) {
+            prop.load(in);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return prop;
     }
 
 }

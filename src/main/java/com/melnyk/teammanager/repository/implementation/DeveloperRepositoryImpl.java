@@ -4,12 +4,15 @@ import com.melnyk.teammanager.model.Developer;
 import com.melnyk.teammanager.repository.DeveloperRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public class DeveloperRepositoryImpl implements DeveloperRepository {
 
     @Override
-    public Developer getById(Integer integer) {
-        return null;
+    public Optional getById(Integer integer) {
+        Developer developer = new Developer();
+
+        return Optional.ofNullable(developer);
     }
 
     @Override

@@ -4,12 +4,15 @@ import com.melnyk.teammanager.model.Team;
 import com.melnyk.teammanager.repository.TeamRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public class TeamRepositoryImpl implements TeamRepository {
 
     @Override
-    public Team getById(Integer integer) {
-        return null;
+    public Optional getById(Integer integer) {
+        Team team = new Team();
+
+        return Optional.ofNullable(team);
     }
 
     @Override

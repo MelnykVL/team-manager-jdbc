@@ -26,6 +26,10 @@ public class Developer {
         this.skills = skills;
     }
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public Integer getId() {
         return id;
     }
