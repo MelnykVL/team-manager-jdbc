@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public class SkillRepositoryImpl implements SkillRepository {
 
-    private static final String SQL_SELECT_BY_ID =
+    private static final String SQL_SELECT_SKILL_BY_ID =
             "SELECT * FROM skills WHERE skill_id=?;";
     private static final String SQL_SAVE_SKILL =
             "INSERT INTO skills(name) VALUES(?);";
@@ -29,7 +29,7 @@ public class SkillRepositoryImpl implements SkillRepository {
         Skill skill = new Skill();
 
         try (Connection con = ConnectionDB.getConnection();
-             PreparedStatement statement = con.prepareStatement(SQL_SELECT_BY_ID)) {
+             PreparedStatement statement = con.prepareStatement(SQL_SELECT_SKILL_BY_ID)) {
 
             statement.setInt(1, integer);
             ResultSet result = statement.executeQuery();
@@ -112,6 +112,8 @@ public class SkillRepositoryImpl implements SkillRepository {
 
                 skills.add(skill);
             }
+
+            result.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
