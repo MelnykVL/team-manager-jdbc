@@ -21,9 +21,16 @@ public class Main {
         DeveloperRepository devRep = new DeveloperRepositoryImpl();
         TeamRepository teamRep = new TeamRepositoryImpl();
 
-        List<Developer> developers = devRep.getAll();
-        for (Developer dev : developers)
-            System.out.println(dev);
+//        System.out.println(teamRep.getById(3).get());
+//
+//        Team team = teamRep.getById(3).get();
+//        team.setName("Dream Team");
+//        teamRep.update(team);
+//
+//        System.out.println(teamRep.getById(3).get());
 
+        List<Team> teams = teamRep.getAll();
+        for (Team team : teams)
+            System.out.println(team);
     }
 }

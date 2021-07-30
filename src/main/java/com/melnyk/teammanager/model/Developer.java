@@ -93,7 +93,7 @@ public class Developer {
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", team=" + team +
+//                ", team=" + team +
                 ", skills=" + skills +
                 '}';
     }

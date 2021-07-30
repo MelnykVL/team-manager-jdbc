@@ -1,6 +1,7 @@
 package com.melnyk.teammanager.repository.implementation;
 
 import com.melnyk.teammanager.model.Developer;
+import com.melnyk.teammanager.model.Skill;
 import com.melnyk.teammanager.model.Team;
 import com.melnyk.teammanager.model.TeamStatus;
 import com.melnyk.teammanager.repository.TeamRepository;
@@ -16,7 +17,9 @@ import java.util.Optional;
 public class TeamRepositoryImpl implements TeamRepository {
 
     private static final String SQL_SELECT_TEAM_BY_ID =
-            "SELECT * FROM teams WHERE team_id=?;";
+            "SELECT * FROM teams" +
+                    " LEFT JOIN developers ON developers.team_id = teams.team_id" +
+                    " WHERE teams.team_id = ?;";
     private static final String SQL_SAVE_TEAM =
             "INSERT INTO teams(name, team_status) VALUES(?,?);";
     private static final String SQL_UPDATE_TEAM =
@@ -26,11 +29,12 @@ public class TeamRepositoryImpl implements TeamRepository {
     private static final String SQL_SELECT_ALL_TEAMS =
             "SELECT * FROM teams" +
             " LEFT JOIN developers" +
-            " ON teams.team_id = developers.team_id;";
+            " ON developers.team_id = teams.team_id;";
 
     @Override
     public Optional getById(Integer integer) {
         Team team = new Team();
+        Developer developer;
 
         try (Connection con = ConnectionDB.getConnection();
              PreparedStatement statement = con.prepareStatement(SQL_SELECT_TEAM_BY_ID)) {
@@ -42,6 +46,19 @@ public class TeamRepositoryImpl implements TeamRepository {
                 team.setId(result.getInt("team_id"));
                 team.setName(result.getString("name"));
                 team.setTeamStatus(TeamStatus.valueOf(result.getString("team_status")));
+
+                while (!result.isAfterLast() && result.getInt("developers.developer_id") != 0) {
+                    developer = new Developer();
+
+                    developer.setId(result.getInt("developers.developer_id"));
+                    developer.setFirstName(result.getString("developers.first_name"));
+                    developer.setLastName(result.getString("developers.last_name"));
+
+                    developer.setTeam(team);
+                    team.addDeveloper(developer);
+
+                    result.next();
+                }
             }
 
             result.close();
@@ -107,24 +124,33 @@ public class TeamRepositoryImpl implements TeamRepository {
         List<Team> teams = new ArrayList<>();
 
         try (Connection con = ConnectionDB.getConnection();
-             PreparedStatement statement = con.prepareStatement(SQL_SELECT_ALL_TEAMS)) {
+             PreparedStatement statement = con.prepareStatement(SQL_SELECT_ALL_TEAMS,
+                     ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
+            Team team;
+            Developer dev;
 
             ResultSet result = statement.executeQuery();
 
             while (result.next()) {
-                Team team = new Team();
+                team = new Team();
 
                 team.setId(result.getInt("team_id"));
                 team.setName(result.getString("name"));
                 team.setTeamStatus(TeamStatus.valueOf(result.getString("team_status")));
-                if (result.getInt("developer_id") != 0) {
-                    Developer dev = new Developer();
 
-                    dev.setId(result.getInt("developer_id"));
-                    dev.setFirstName(result.getString("first_name"));
-                    dev.setLastName(result.getString("last_name"));
+                if (result.getObject("developer_id") != null) {
+                    while (!result.isAfterLast() && team.getId() == result.getInt("developers.team_id")) {
+                        dev = new Developer();
 
-                    team.addDeveloper(dev);
+                        dev.setId(result.getInt("developer_id"));
+                        dev.setFirstName(result.getString("first_name"));
+                        dev.setLastName(result.getString("last_name"));
+
+                        team.addDeveloper(dev);
+
+                        result.next();
+                    }
+                    result.previous();
                 }
 
                 teams.add(team);

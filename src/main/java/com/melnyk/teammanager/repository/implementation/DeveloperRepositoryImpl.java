@@ -33,8 +33,8 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
 
     @Override
     public Optional getById(Integer integer) {
-        Team team = new Team();
         Developer developer = new Developer();
+        Team team;
         Skill skill;
 
         try (Connection con = ConnectionDB.getConnection();
@@ -44,12 +44,13 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
             ResultSet result = statement.executeQuery();
 
             if (result.next()) {
-
                 developer.setId(result.getInt("developer_id"));
                 developer.setFirstName(result.getString("first_name"));
                 developer.setLastName(result.getString("last_name"));
 
                 if (result.getObject("team_id") != null) {
+                    team = new Team();
+
                     team.setId((result.getInt("teams.team_id")));
                     team.setName(result.getString("teams.name"));
                     team.setTeamStatus(TeamStatus.valueOf((String) result.getObject("team_status")));
@@ -162,21 +163,23 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
                     team.setTeamStatus(TeamStatus.valueOf((String) result.getObject("team_status")));
 
                     dev.setTeam(team);
-                    team.addDeveloper(dev);
+//                    team.addDeveloper(dev);
                 }
 
-                while (result.getObject("skills.skill_id") != null &&
-                        !result.isAfterLast() &&
-                        result.getInt("developers_skills.developer_id") == dev.getId()) {
-                    skill = new Skill();
+                if (result.getObject("skills.skill_id") != null) {
+                    while (!result.isAfterLast() &&
+                            result.getInt("developers_skills.developer_id") == dev.getId()) {
+                        skill = new Skill();
 
-                    skill.setId(result.getInt("skills.skill_id"));
-                    skill.setName(result.getString("skills.name"));
+                        skill.setId(result.getInt("skills.skill_id"));
+                        skill.setName(result.getString("skills.name"));
 
-                    dev.addSkill(skill);
+                        dev.addSkill(skill);
 //                    skill.addDeveloper(dev);
 
-                    result.next();
+                        result.next();
+                    }
+                    result.previous();
                 }
 
                 developers.add(dev);
