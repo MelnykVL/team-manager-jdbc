@@ -1,5 +1,6 @@
 package com.melnyk.teammanager.repository.implementation;
 
+import com.melnyk.teammanager.model.Developer;
 import com.melnyk.teammanager.model.Team;
 import com.melnyk.teammanager.model.TeamStatus;
 import com.melnyk.teammanager.repository.TeamRepository;
@@ -23,7 +24,9 @@ public class TeamRepositoryImpl implements TeamRepository {
     private static final String SQL_DELETE_TEAM =
             "DELETE FROM teams WHERE team_id=?;";
     private static final String SQL_SELECT_ALL_TEAMS =
-            "SELECT * FROM teams ORDER BY team_id;";
+            "SELECT * FROM teams" +
+            " LEFT JOIN developers" +
+            " ON teams.team_id = developers.team_id;";
 
     @Override
     public Optional getById(Integer integer) {
@@ -114,6 +117,15 @@ public class TeamRepositoryImpl implements TeamRepository {
                 team.setId(result.getInt("team_id"));
                 team.setName(result.getString("name"));
                 team.setTeamStatus(TeamStatus.valueOf(result.getString("team_status")));
+                if (result.getInt("developer_id") != 0) {
+                    Developer dev = new Developer();
+
+                    dev.setId(result.getInt("developer_id"));
+                    dev.setFirstName(result.getString("first_name"));
+                    dev.setLastName(result.getString("last_name"));
+
+                    team.addDeveloper(dev);
+                }
 
                 teams.add(team);
             }

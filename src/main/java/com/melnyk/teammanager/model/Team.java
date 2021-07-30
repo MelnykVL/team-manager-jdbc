@@ -80,7 +80,7 @@ public class Team {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", teamStatus=" + teamStatus +
-                ", developers=" + developers +
+//                ", developers=" + developers +
                 '}';
     }
 

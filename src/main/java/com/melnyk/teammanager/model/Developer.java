@@ -2,23 +2,34 @@ package com.melnyk.teammanager.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Developer {
 
     private Integer id;
     private String firstName;
     private String lastName;
+    private Team team;
     private List<Skill> skills;
 
     public Developer() {
+        this.team = null;
         this.skills = new ArrayList<>();
     }
 
     public Developer(String firstName, String lastName) {
+        this();
         this.firstName = firstName;
         this.lastName = lastName;
-        this.skills = new ArrayList<>();
     }
+
+    public Developer(String firstName, String lastName, Team team) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.team = team;
+    }
+
+
 
     public Developer(String firstName, String lastName, List<Skill> skills) {
         this.firstName = firstName;
@@ -50,6 +61,14 @@ public class Developer {
         this.lastName = lastName;
     }
 
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
+    }
+
     public List<Skill> getSkills() {
         return skills;
     }
@@ -74,8 +93,8 @@ public class Developer {
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
+                ", team=" + team +
                 ", skills=" + skills +
                 '}';
     }
-
 }
