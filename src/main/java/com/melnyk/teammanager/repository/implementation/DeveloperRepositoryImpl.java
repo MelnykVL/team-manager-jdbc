@@ -101,7 +101,7 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
     }
 
     @Override
-    public Developer update(Developer developer) {
+    public void update(Developer developer) {
 
         try (Connection con = ConnectionDB.getConnection();
              PreparedStatement statement = con.prepareStatement(SQL_UPDATE_DEVELOPER)) {
@@ -119,7 +119,6 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
             e.printStackTrace();
         }
 
-        return developer;
     }
 
     @Override

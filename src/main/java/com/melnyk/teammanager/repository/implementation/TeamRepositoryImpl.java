@@ -87,7 +87,7 @@ public class TeamRepositoryImpl implements TeamRepository {
     }
 
     @Override
-    public Team update(Team team) {
+    public void update(Team team) {
 
         try (Connection con = ConnectionDB.getConnection();
              PreparedStatement statement = con.prepareStatement(SQL_UPDATE_TEAM)) {
@@ -101,7 +101,6 @@ public class TeamRepositoryImpl implements TeamRepository {
             e.printStackTrace();
         }
 
-        return null;
     }
 
     @Override

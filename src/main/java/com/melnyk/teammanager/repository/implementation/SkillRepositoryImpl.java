@@ -25,7 +25,7 @@ public class SkillRepositoryImpl implements SkillRepository {
             "SELECT * FROM skills ORDER BY skill_id;";
 
     @Override
-    public Optional getById(Integer integer) {
+    public Optional<Skill> getById(Integer integer) {
         Skill skill = new Skill();
 
         try (Connection con = ConnectionDB.getConnection();
@@ -64,7 +64,7 @@ public class SkillRepositoryImpl implements SkillRepository {
     }
 
     @Override
-    public Skill update(Skill skill) {
+    public void update(Skill skill) {
 
         try (Connection con = ConnectionDB.getConnection();
              PreparedStatement statement = con.prepareStatement(SQL_UPDATE_SKILL)){
@@ -77,7 +77,6 @@ public class SkillRepositoryImpl implements SkillRepository {
             e.printStackTrace();
         }
 
-        return skill;
     }
 
     @Override
