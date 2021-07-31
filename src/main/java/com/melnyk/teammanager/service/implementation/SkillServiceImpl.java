@@ -26,6 +26,11 @@ public class SkillServiceImpl implements SkillService {
     }
 
     @Override
+    public void removeSkill(Integer id) {
+        skillRep.removeById(id);
+    }
+
+    @Override
     public List<Skill> getAllSkills() {
         return skillRep.getAll();
     }

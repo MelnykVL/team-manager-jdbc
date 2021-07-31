@@ -26,6 +26,11 @@ public class DeveloperServiceImpl implements DeveloperService {
     }
 
     @Override
+    public void removeDeveloper(Integer id) {
+        devRep.removeById(id);
+    }
+
+    @Override
     public List<Developer> getAllDevelopers() {
         return devRep.getAll();
     }

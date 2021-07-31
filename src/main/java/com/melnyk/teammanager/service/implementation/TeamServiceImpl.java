@@ -26,6 +26,11 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
+    public void removeTeam(Integer id) {
+        teamRep.removeById(id);
+    }
+
+    @Override
     public List<Team> getAllTeams() {
         return teamRep.getAll();
     }

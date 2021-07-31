@@ -8,5 +8,6 @@ public interface DeveloperService {
     Developer getDeveloper(Integer id);
     void saveDeveloper(Developer developer);
     void updateDeveloper(Developer developer);
+    void removeDeveloper(Integer id);
     List<Developer> getAllDevelopers();
 }
