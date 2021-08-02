@@ -32,7 +32,7 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
             "INSERT INTO developers_skills(developer_id, skill_id) VALUES(?,?);";
 
     @Override
-    public Optional getById(Integer integer) {
+    public Developer getById(Integer integer) {
         Developer developer = new Developer();
         Team team;
         Skill skill;
@@ -76,11 +76,12 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
             e.printStackTrace();
         }
 
-        return Optional.ofNullable(developer);
+        return developer;
     }
 
     @Override
-    public Developer add(Developer developer) {
+    public boolean add(Developer developer) {
+        boolean status = false;
 
         try (Connection con = ConnectionDB.getConnection();
              PreparedStatement statement = con.prepareStatement(SQL_SAVE_DEVELOPER)) {
@@ -92,16 +93,17 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
             else
                 statement.setNull(3, Types.NULL);
 
-            statement.execute();
+            status = statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return developer;
+        return status;
     }
 
     @Override
-    public void update(Developer developer) {
+    public boolean update(Developer developer) {
+        boolean status = false;
 
         try (Connection con = ConnectionDB.getConnection();
              PreparedStatement statement = con.prepareStatement(SQL_UPDATE_DEVELOPER)) {
@@ -114,26 +116,29 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
                 statement.setNull(3, Types.NULL);
             statement.setInt(4, developer.getId());
 
-            statement.execute();
+            status = statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
+        return status;
     }
 
     @Override
-    public void removeById(Integer integer) {
+    public boolean removeById(Integer integer) {
+        boolean status = false;
 
         try (Connection con = ConnectionDB.getConnection();
              PreparedStatement statement = con.prepareStatement(SQL_DELETE_DEVELOPER)) {
 
             statement.setInt(1, integer);
 
-            statement.execute();
+            status = statement.execute();
         }catch (SQLException e) {
             e.printStackTrace();
         }
 
+        return status;
     }
 
     @Override

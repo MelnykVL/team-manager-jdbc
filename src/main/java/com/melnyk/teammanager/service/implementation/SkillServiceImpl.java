@@ -12,7 +12,7 @@ public class SkillServiceImpl implements SkillService {
 
     @Override
     public Skill getSkill(Integer id) {
-        return skillRep.getById(id).get();
+        return skillRep.getById(id);
     }
 
     @Override

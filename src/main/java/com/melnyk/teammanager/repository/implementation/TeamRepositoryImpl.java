@@ -32,7 +32,7 @@ public class TeamRepositoryImpl implements TeamRepository {
             " ON developers.team_id = teams.team_id;";
 
     @Override
-    public Optional getById(Integer integer) {
+    public Team getById(Integer integer) {
         Team team = new Team();
         Developer developer;
 
@@ -66,11 +66,12 @@ public class TeamRepositoryImpl implements TeamRepository {
             e.printStackTrace();
         }
 
-        return Optional.ofNullable(team);
+        return team;
     }
 
     @Override
-    public Team add(Team team) {
+    public boolean add(Team team) {
+        boolean status = false;
 
         try (Connection con = ConnectionDB.getConnection();
              PreparedStatement statement = con.prepareStatement(SQL_SAVE_TEAM)) {
@@ -78,16 +79,17 @@ public class TeamRepositoryImpl implements TeamRepository {
             statement.setString(1, team.getName());
             statement.setString(2, team.getTeamStatus().toString());
 
-            statement.execute();
+            status = statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return team;
+        return status;
     }
 
     @Override
-    public void update(Team team) {
+    public boolean update(Team team) {
+        boolean status = false;
 
         try (Connection con = ConnectionDB.getConnection();
              PreparedStatement statement = con.prepareStatement(SQL_UPDATE_TEAM)) {
@@ -96,26 +98,29 @@ public class TeamRepositoryImpl implements TeamRepository {
             statement.setString(2, team.getTeamStatus().toString());
             statement.setInt(3, team.getId());
 
-            statement.execute();
+            status = statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
+        return status;
     }
 
     @Override
-    public void removeById(Integer integer) {
+    public boolean removeById(Integer integer) {
+        boolean status = false;
 
         try (Connection con = ConnectionDB.getConnection();
              PreparedStatement statement = con.prepareStatement(SQL_DELETE_TEAM)){
 
             statement.setInt(1, integer);
 
-            statement.execute();
+            status = statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
+        return status;
     }
 
     @Override

@@ -12,7 +12,7 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public Team getTeam(Integer id) {
-        return teamRep.getById(id).get();
+        return teamRep.getById(id);
     }
 
     @Override

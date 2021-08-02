@@ -25,7 +25,7 @@ public class SkillRepositoryImpl implements SkillRepository {
             "SELECT * FROM skills ORDER BY skill_id;";
 
     @Override
-    public Optional<Skill> getById(Integer integer) {
+    public Skill getById(Integer integer) {
         Skill skill = new Skill();
 
         try (Connection con = ConnectionDB.getConnection();
@@ -44,27 +44,29 @@ public class SkillRepositoryImpl implements SkillRepository {
             e.printStackTrace();
         }
 
-        return Optional.ofNullable(skill);
+        return skill;
     }
 
     @Override
-    public Skill add(Skill skill) {
+    public boolean add(Skill skill) {
+        boolean status = false;
 
         try (Connection con = ConnectionDB.getConnection();
              PreparedStatement statement = con.prepareStatement(SQL_SAVE_SKILL)){
 
             statement.setString(1, skill.getName());
 
-            statement.execute();
+            status = statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return skill;
+        return status;
     }
 
     @Override
-    public void update(Skill skill) {
+    public boolean update(Skill skill) {
+        boolean status = false;
 
         try (Connection con = ConnectionDB.getConnection();
              PreparedStatement statement = con.prepareStatement(SQL_UPDATE_SKILL)){
@@ -72,26 +74,29 @@ public class SkillRepositoryImpl implements SkillRepository {
             statement.setString(1, skill.getName());
             statement.setInt(2, skill.getId());
 
-            statement.execute();
+            status = statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
+        return status;
     }
 
     @Override
-    public void removeById(Integer integer) {
+    public boolean removeById(Integer integer) {
+        boolean status = false;
 
         try (Connection con = ConnectionDB.getConnection();
              PreparedStatement statement = con.prepareStatement(SQL_DELETE_SKILL)) {
 
             statement.setInt(1, integer);
 
-            statement.execute();
+            status = statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
+        return status;
     }
 
     @Override

@@ -12,7 +12,7 @@ public class DeveloperServiceImpl implements DeveloperService {
 
     @Override
     public Developer getDeveloper(Integer id) {
-        return devRep.getById(id).get();
+        return devRep.getById(id);
     }
 
     @Override

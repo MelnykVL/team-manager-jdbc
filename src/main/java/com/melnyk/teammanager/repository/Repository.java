@@ -4,10 +4,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface Repository<T, ID> {
-    Optional<T> getById(ID id);
-    T add(T t);
-    void update(T t);
-    void removeById(ID id);
+    T getById(ID id);
+    boolean add(T t);
+    boolean update(T t);
+    boolean removeById(ID id);
 
     List<T> getAll();
 }

@@ -1,19 +1,15 @@
 package com.melnyk.teammanager.model;
 
+import java.util.Objects;
+
 public class Skill {
 
     private Integer id;
     private String name;
-//    private List<Developer> developers;
-
-//    public Skill() {
-//        this.developers = new ArrayList<>();
-//    }
 
     public Skill() {}
 
     public Skill(String name) {
-//        this();
         this.name = name;
     }
 
@@ -33,23 +29,18 @@ public class Skill {
         this.name = name;
     }
 
-//    public List<Developer> getDevelopers() {
-//        return developers;
-//    }
-//
-//    public void setDevelopers(List<Developer> developers) {
-//        this.developers = developers;
-//    }
-//
-//    public void addDeveloper(Developer dev) {
-//        this.developers.add(dev);
-//    }
-//
-//    public void removeDeveloper(Integer id) {
-//        for (Developer dev : this.developers)
-//            if (dev.getId() == id)
-//                this.developers.remove(dev);
-//    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Skill skill = (Skill) o;
+        return Objects.equals(id, skill.id) && Objects.equals(name, skill.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name);
+    }
 
     @Override
     public String toString() {
