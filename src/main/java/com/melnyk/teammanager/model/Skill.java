@@ -1,8 +1,5 @@
 package com.melnyk.teammanager.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Skill {
 
     private Integer id;
@@ -56,10 +53,6 @@ public class Skill {
 
     @Override
     public String toString() {
-        return "Skill{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-//                ", developers=" + developers +
-                '}';
+        return "Навык ID-" + id + ": \'" + name + '\'';
     }
 }

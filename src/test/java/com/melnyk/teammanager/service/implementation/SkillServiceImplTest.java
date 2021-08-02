@@ -2,6 +2,7 @@ package com.melnyk.teammanager.service.implementation;
 
 import com.melnyk.teammanager.model.Skill;
 import com.melnyk.teammanager.repository.SkillRepository;
+import com.melnyk.teammanager.repository.implementation.SkillRepositoryImpl;
 import com.melnyk.teammanager.service.SkillService;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -12,19 +13,19 @@ import static org.junit.Assert.*;
 
 public class SkillServiceImplTest {
 
-    SkillService skillRep = new SkillServiceImpl();
-//    SkillServiceImpl skillRep = Mockito.mock(SkillServiceImpl.class);
-//    SkillServiceImpl skillRep = Mockito.spy(SkillServiceImpl.class);
+//    SkillRepository skillRep = new SkillRepositoryImpl();
+    SkillRepositoryImpl skillRep = Mockito.mock(SkillRepositoryImpl.class);
+//    SkillRepositoryImpl skillRep = Mockito.spy(SkillRepositoryImpl.class);
 
     @Test
     public void getSkill() {
-        Skill skill = skillRep.getSkill(2);
+        Skill skill = skillRep.getById(2).get();
         assertNotNull(skill.getId());
     }
 
     @Test
     public void ifSkillDoesNotExists() {
-        Skill skill = skillRep.getSkill(0);
+        Skill skill = skillRep.getAll().get(0);
         assertNull(skill.getId());
     }
 

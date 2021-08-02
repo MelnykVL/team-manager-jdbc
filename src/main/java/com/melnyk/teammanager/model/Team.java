@@ -57,7 +57,7 @@ public class Team {
     }
 
     public List<Developer> getDevelopers() {
-        return developers;
+        return this.developers;
     }
 
     public void setDevelopers(List<Developer> developers) {
@@ -69,19 +69,22 @@ public class Team {
     }
 
     public  void removeDeveloper(Integer id) {
-        for (Developer dev : this.developers)
-            if (dev.getId() == id)
-                this.developers.remove(dev);
+//        for (Developer dev : this.developers)
+//            if (dev.getId() == id)
+                this.developers.remove(
+                        this.developers.stream()
+                                .filter(dev -> dev.getId() == id)
+                                .findFirst()
+                                .get()
+                );
     }
 
     @Override
     public String toString() {
-        return "Team{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", teamStatus=" + teamStatus +
-                ", developers=" + developers +
-                '}';
+        return "\nКоманда ID-" + id +
+                ": Название = '" + name + '\'' +
+                "; Статус = " + teamStatus +
+                "; Члены команды:" + developers;
     }
 
 }
