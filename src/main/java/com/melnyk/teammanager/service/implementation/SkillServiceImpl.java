@@ -2,13 +2,16 @@ package com.melnyk.teammanager.service.implementation;
 
 import com.melnyk.teammanager.model.Skill;
 import com.melnyk.teammanager.repository.SkillRepository;
-import com.melnyk.teammanager.repository.implementation.SkillRepositoryImpl;
 import com.melnyk.teammanager.service.SkillService;
 
 import java.util.List;
 
 public class SkillServiceImpl implements SkillService {
-    private final SkillRepository skillRep = new SkillRepositoryImpl();
+    private final SkillRepository skillRep;
+
+    public SkillServiceImpl(SkillRepository sr) {
+        this.skillRep = sr;
+    }
 
     @Override
     public Skill getSkill(Integer id) {
@@ -16,18 +19,18 @@ public class SkillServiceImpl implements SkillService {
     }
 
     @Override
-    public void saveSkill(Skill skill) {
-        skillRep.add(skill);
+    public Skill saveSkill(Skill skill) {
+        return skillRep.add(skill);
     }
 
     @Override
-    public void updateSkill(Skill skill) {
-        skillRep.update(skill);
+    public Skill updateSkill(Skill skill) {
+        return skillRep.update(skill);
     }
 
     @Override
-    public void removeSkill(Integer id) {
-        skillRep.removeById(id);
+    public boolean removeSkill(Integer id) {
+        return skillRep.removeById(id);
     }
 
     @Override

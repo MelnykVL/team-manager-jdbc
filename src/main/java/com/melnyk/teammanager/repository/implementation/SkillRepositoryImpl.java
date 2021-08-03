@@ -3,13 +3,12 @@ package com.melnyk.teammanager.repository.implementation;
 import com.melnyk.teammanager.model.Skill;
 import com.melnyk.teammanager.repository.SkillRepository;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class SkillRepositoryImpl implements SkillRepository {
 
@@ -28,8 +27,7 @@ public class SkillRepositoryImpl implements SkillRepository {
     public Skill getById(Integer integer) {
         Skill skill = new Skill();
 
-        try (Connection con = ConnectionDB.getConnection();
-             PreparedStatement statement = con.prepareStatement(SQL_SELECT_SKILL_BY_ID)) {
+        try (PreparedStatement statement = ConnectionDB.getPrepareStatement(SQL_SELECT_SKILL_BY_ID)) {
 
             statement.setInt(1, integer);
             ResultSet result = statement.executeQuery();
@@ -48,46 +46,48 @@ public class SkillRepositoryImpl implements SkillRepository {
     }
 
     @Override
-    public boolean add(Skill skill) {
-        boolean status = false;
-
-        try (Connection con = ConnectionDB.getConnection();
-             PreparedStatement statement = con.prepareStatement(SQL_SAVE_SKILL)){
+    public Skill add(Skill skill) {
+        try (PreparedStatement statement = ConnectionDB.getPrepareStatement(SQL_SAVE_SKILL, Statement.RETURN_GENERATED_KEYS)){
 
             statement.setString(1, skill.getName());
 
-            status = statement.execute();
+            statement.execute();
+
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    skill.setId(generatedKeys.getInt(1));
+                }
+                else {
+                    throw new SQLException("Не удалось создать навык.");
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return status;
+        return skill;
     }
 
     @Override
-    public boolean update(Skill skill) {
-        boolean status = false;
-
-        try (Connection con = ConnectionDB.getConnection();
-             PreparedStatement statement = con.prepareStatement(SQL_UPDATE_SKILL)){
+    public Skill update(Skill skill) {
+        try (PreparedStatement statement = ConnectionDB.getPrepareStatement(SQL_UPDATE_SKILL)){
 
             statement.setString(1, skill.getName());
             statement.setInt(2, skill.getId());
 
-            status = statement.execute();
+            statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return status;
+        return skill;
     }
 
     @Override
     public boolean removeById(Integer integer) {
         boolean status = false;
 
-        try (Connection con = ConnectionDB.getConnection();
-             PreparedStatement statement = con.prepareStatement(SQL_DELETE_SKILL)) {
+        try (PreparedStatement statement = ConnectionDB.getPrepareStatement(SQL_DELETE_SKILL)) {
 
             statement.setInt(1, integer);
 
@@ -103,8 +103,7 @@ public class SkillRepositoryImpl implements SkillRepository {
     public List<Skill> getAll() {
         List<Skill> skills = new ArrayList<>();
 
-        try (Connection con = ConnectionDB.getConnection();
-             PreparedStatement statement = con.prepareStatement(SQL_SELECT_ALL_SKILLS)) {
+        try (PreparedStatement statement = ConnectionDB.getPrepareStatement(SQL_SELECT_ALL_SKILLS)) {
 
             ResultSet result = statement.executeQuery();
 

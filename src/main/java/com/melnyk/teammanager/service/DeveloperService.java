@@ -6,8 +6,8 @@ import java.util.List;
 
 public interface DeveloperService {
     Developer getDeveloper(Integer id);
-    void saveDeveloper(Developer developer);
-    void updateDeveloper(Developer developer);
-    void removeDeveloper(Integer id);
+    Developer saveDeveloper(Developer developer);
+    Developer updateDeveloper(Developer developer);
+    boolean removeDeveloper(Integer id);
     List<Developer> getAllDevelopers();
 }

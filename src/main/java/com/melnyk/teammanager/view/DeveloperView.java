@@ -1,13 +1,14 @@
 package com.melnyk.teammanager.view;
 
 import com.melnyk.teammanager.model.Developer;
+import com.melnyk.teammanager.repository.implementation.DeveloperRepositoryImpl;
 import com.melnyk.teammanager.service.DeveloperService;
 import com.melnyk.teammanager.service.implementation.DeveloperServiceImpl;
 
 import java.util.List;
 
 public class DeveloperView {
-    private DeveloperService developerService = new DeveloperServiceImpl();
+    private DeveloperService developerService = new DeveloperServiceImpl(new DeveloperRepositoryImpl());
 
     public void showListOfCommands() {
         System.out.println("\n|----Робота со списком разработчиков----|".toUpperCase());

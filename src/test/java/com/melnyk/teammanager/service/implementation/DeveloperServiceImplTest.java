@@ -1,9 +1,11 @@
 package com.melnyk.teammanager.service.implementation;
 
 import com.melnyk.teammanager.model.Developer;
-import com.melnyk.teammanager.repository.DeveloperRepository;
+import com.melnyk.teammanager.repository.implementation.DeveloperRepositoryImpl;
+import com.melnyk.teammanager.service.DeveloperService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -18,25 +20,27 @@ import static org.mockito.BDDMockito.given;
 public class DeveloperServiceImplTest {
 
     @Mock
-    private DeveloperRepository devRep;
+    private DeveloperRepositoryImpl devRep;
+    @InjectMocks
+    private DeveloperServiceImpl devSer;
 
     @Test
     public void ifDevExists() {
         Developer dev = new Developer();
         dev.setId(1);
 
-        given(devRep.getById(1)).willReturn(dev);
+        given(devSer.getDeveloper(1)).willReturn(dev);
 
-        dev = devRep.getById(1);
+        dev = devSer.getDeveloper(1);
 
         assertNotNull(dev);
     }
 
     @Test
     public void ifDevNotExists() {
-        given(devRep.getById(1)).willReturn(null);
+        given(devSer.getDeveloper(1)).willReturn(null);
 
-        Developer dev = devRep.getById(1);
+        Developer dev = devSer.getDeveloper(1);
 
         assertNull(dev);
     }
@@ -45,29 +49,29 @@ public class DeveloperServiceImplTest {
     public void saveDeveloper() {
         Developer dev = new Developer();
 
-        given(devRep.add(dev)).willReturn(true);
+        given(devSer.saveDeveloper(dev)).willReturn(dev);
 
-        boolean isDevAdded = devRep.add(dev);
+        dev = devSer.saveDeveloper(dev);
 
-        assertTrue(isDevAdded);
+        assertNotNull(dev);
     }
 
     @Test
     public void updateDeveloper() {
         Developer dev = new Developer();
 
-        given(devRep.update(dev)).willReturn(true);
+        given(devSer.updateDeveloper(dev)).willReturn(dev);
 
-        boolean isDevUpdated = devRep.update(dev);
+        dev = devSer.updateDeveloper(dev);
 
-        assertTrue(isDevUpdated);
+        assertNotNull(dev);
     }
 
     @Test
     public void removeDeveloper() {
-        given(devRep.removeById(1)).willReturn(true);
+        given(devSer.removeDeveloper(1)).willReturn(true);
 
-        boolean isDevRemoved = devRep.removeById(1);
+        boolean isDevRemoved = devSer.removeDeveloper(1);
 
         assertTrue(isDevRemoved);
     }
@@ -80,18 +84,18 @@ public class DeveloperServiceImplTest {
                 new Developer("Fn-3", "Sn-3")
         );
 
-        given(devRep.getAll()).willReturn(developers);
+        given(devSer.getAllDevelopers()).willReturn(developers);
 
-        List<Developer> devList = devRep.getAll();
+        List<Developer> devList = devSer.getAllDevelopers();
 
         assertEquals(devList, developers);
     }
 
     @Test
     public void ifGetEmptyList() {
-        given(devRep.getAll()).willReturn(new ArrayList<>());
+        given(devSer.getAllDevelopers()).willReturn(new ArrayList<>());
 
-        List<Developer> devList = devRep.getAll();
+        List<Developer> devList = devSer.getAllDevelopers();
 
         assertEquals(devList, new ArrayList<>());
     }

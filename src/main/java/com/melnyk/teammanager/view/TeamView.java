@@ -1,11 +1,12 @@
 package com.melnyk.teammanager.view;
 
 import com.melnyk.teammanager.model.Team;
+import com.melnyk.teammanager.repository.implementation.TeamRepositoryImpl;
 import com.melnyk.teammanager.service.TeamService;
 import com.melnyk.teammanager.service.implementation.TeamServiceImpl;
 
 public class TeamView {
-    private TeamService teamService = new TeamServiceImpl();
+    private TeamService teamService = new TeamServiceImpl(new TeamRepositoryImpl());
 
     public void showListOfCommands() {
         System.out.println("\n|----Робота со списком команд----|".toUpperCase());

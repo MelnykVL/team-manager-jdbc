@@ -1,18 +1,16 @@
 package com.melnyk.teammanager.repository.implementation;
 
 import com.melnyk.teammanager.model.Developer;
-import com.melnyk.teammanager.model.Skill;
 import com.melnyk.teammanager.model.Team;
 import com.melnyk.teammanager.model.TeamStatus;
 import com.melnyk.teammanager.repository.TeamRepository;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class TeamRepositoryImpl implements TeamRepository {
 
@@ -36,8 +34,7 @@ public class TeamRepositoryImpl implements TeamRepository {
         Team team = new Team();
         Developer developer;
 
-        try (Connection con = ConnectionDB.getConnection();
-             PreparedStatement statement = con.prepareStatement(SQL_SELECT_TEAM_BY_ID)) {
+        try (PreparedStatement statement = ConnectionDB.getPrepareStatement(SQL_SELECT_TEAM_BY_ID)) {
 
             statement.setInt(1, integer);
             ResultSet result = statement.executeQuery();
@@ -70,48 +67,50 @@ public class TeamRepositoryImpl implements TeamRepository {
     }
 
     @Override
-    public boolean add(Team team) {
-        boolean status = false;
-
-        try (Connection con = ConnectionDB.getConnection();
-             PreparedStatement statement = con.prepareStatement(SQL_SAVE_TEAM)) {
+    public Team add(Team team) {
+        try (PreparedStatement statement = ConnectionDB.getPrepareStatement(SQL_SAVE_TEAM, Statement.RETURN_GENERATED_KEYS)) {
 
             statement.setString(1, team.getName());
             statement.setString(2, team.getTeamStatus().toString());
 
-            status = statement.execute();
+            statement.execute();
+
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    team.setId(generatedKeys.getInt(1));
+                }
+                else {
+                    throw new SQLException("Не удалось создать разработчика.");
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return status;
+        return team;
     }
 
     @Override
-    public boolean update(Team team) {
-        boolean status = false;
-
-        try (Connection con = ConnectionDB.getConnection();
-             PreparedStatement statement = con.prepareStatement(SQL_UPDATE_TEAM)) {
+    public Team update(Team team) {
+        try (PreparedStatement statement = ConnectionDB.getPrepareStatement(SQL_UPDATE_TEAM)) {
 
             statement.setString(1, team.getName());
             statement.setString(2, team.getTeamStatus().toString());
             statement.setInt(3, team.getId());
 
-            status = statement.execute();
+            statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return status;
+        return team;
     }
 
     @Override
     public boolean removeById(Integer integer) {
         boolean status = false;
 
-        try (Connection con = ConnectionDB.getConnection();
-             PreparedStatement statement = con.prepareStatement(SQL_DELETE_TEAM)){
+        try (PreparedStatement statement = ConnectionDB.getPrepareStatement(SQL_DELETE_TEAM)){
 
             statement.setInt(1, integer);
 
@@ -127,8 +126,7 @@ public class TeamRepositoryImpl implements TeamRepository {
     public List<Team> getAll() {
         List<Team> teams = new ArrayList<>();
 
-        try (Connection con = ConnectionDB.getConnection();
-             PreparedStatement statement = con.prepareStatement(SQL_SELECT_ALL_TEAMS,
+        try (PreparedStatement statement = ConnectionDB.getPrepareStatement(SQL_SELECT_ALL_TEAMS,
                      ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
             Team team;
             Developer dev;

@@ -2,13 +2,16 @@ package com.melnyk.teammanager.service.implementation;
 
 import com.melnyk.teammanager.model.Developer;
 import com.melnyk.teammanager.repository.DeveloperRepository;
-import com.melnyk.teammanager.repository.implementation.DeveloperRepositoryImpl;
 import com.melnyk.teammanager.service.DeveloperService;
 
 import java.util.List;
 
 public class DeveloperServiceImpl implements DeveloperService {
-    private final DeveloperRepository devRep = new DeveloperRepositoryImpl();
+    private final DeveloperRepository devRep;
+
+    public DeveloperServiceImpl(DeveloperRepository dr) {
+        this.devRep = dr;
+    }
 
     @Override
     public Developer getDeveloper(Integer id) {
@@ -16,18 +19,18 @@ public class DeveloperServiceImpl implements DeveloperService {
     }
 
     @Override
-    public void saveDeveloper(Developer dev) {
-        devRep.add(dev);
+    public Developer saveDeveloper(Developer dev) {
+        return devRep.add(dev);
     }
 
     @Override
-    public void updateDeveloper(Developer dev) {
-        devRep.update(dev);
+    public Developer updateDeveloper(Developer dev) {
+        return devRep.update(dev);
     }
 
     @Override
-    public void removeDeveloper(Integer id) {
-        devRep.removeById(id);
+    public boolean removeDeveloper(Integer id) {
+        return devRep.removeById(id);
     }
 
     @Override

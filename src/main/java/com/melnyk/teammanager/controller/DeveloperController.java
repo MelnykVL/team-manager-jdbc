@@ -1,6 +1,8 @@
 package com.melnyk.teammanager.controller;
 
 import com.melnyk.teammanager.model.Developer;
+import com.melnyk.teammanager.repository.implementation.DeveloperRepositoryImpl;
+import com.melnyk.teammanager.repository.implementation.SkillRepositoryImpl;
 import com.melnyk.teammanager.service.DeveloperService;
 import com.melnyk.teammanager.service.SkillService;
 import com.melnyk.teammanager.service.implementation.DeveloperServiceImpl;
@@ -13,8 +15,8 @@ import java.util.Scanner;
 public class DeveloperController {
     private DeveloperView developerView = new DeveloperView();
     private SkillView skillView = new SkillView();
-    private DeveloperService developerService = new DeveloperServiceImpl();
-    private SkillService skillService = new SkillServiceImpl();
+    private DeveloperService developerService = new DeveloperServiceImpl(new DeveloperRepositoryImpl());
+    private SkillService skillService = new SkillServiceImpl(new SkillRepositoryImpl());
 
 
     public void execute() {

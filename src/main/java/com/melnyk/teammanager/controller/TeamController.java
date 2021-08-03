@@ -2,6 +2,8 @@ package com.melnyk.teammanager.controller;
 
 import com.melnyk.teammanager.model.Team;
 import com.melnyk.teammanager.model.TeamStatus;
+import com.melnyk.teammanager.repository.implementation.DeveloperRepositoryImpl;
+import com.melnyk.teammanager.repository.implementation.TeamRepositoryImpl;
 import com.melnyk.teammanager.service.DeveloperService;
 import com.melnyk.teammanager.service.TeamService;
 import com.melnyk.teammanager.service.implementation.DeveloperServiceImpl;
@@ -14,8 +16,8 @@ import java.util.Scanner;
 public class TeamController {
     private TeamView teamView = new TeamView();
     private DeveloperView developerView = new DeveloperView();
-    private TeamService teamService = new TeamServiceImpl();
-    private DeveloperService developerService = new DeveloperServiceImpl();
+    private TeamService teamService = new TeamServiceImpl(new TeamRepositoryImpl());
+    private DeveloperService developerService = new DeveloperServiceImpl(new DeveloperRepositoryImpl());
 
     public void execute() {
 

@@ -2,13 +2,16 @@ package com.melnyk.teammanager.service.implementation;
 
 import com.melnyk.teammanager.model.Team;
 import com.melnyk.teammanager.repository.TeamRepository;
-import com.melnyk.teammanager.repository.implementation.TeamRepositoryImpl;
 import com.melnyk.teammanager.service.TeamService;
 
 import java.util.List;
 
 public class TeamServiceImpl implements TeamService {
-    private final TeamRepository teamRep = new TeamRepositoryImpl();
+    private final TeamRepository teamRep;
+
+    public TeamServiceImpl(TeamRepository tr) {
+        this.teamRep = tr;
+    }
 
     @Override
     public Team getTeam(Integer id) {
@@ -16,18 +19,18 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public void saveTeam(Team team) {
-        teamRep.add(team);
+    public Team saveTeam(Team team) {
+        return teamRep.add(team);
     }
 
     @Override
-    public void updateTeam(Team team) {
-        teamRep.update(team);
+    public Team updateTeam(Team team) {
+        return teamRep.update(team);
     }
 
     @Override
-    public void removeTeam(Integer id) {
-        teamRep.removeById(id);
+    public boolean removeTeam(Integer id) {
+        return teamRep.removeById(id);
     }
 
     @Override

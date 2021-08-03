@@ -1,6 +1,7 @@
 package com.melnyk.teammanager.controller;
 
 import com.melnyk.teammanager.model.Skill;
+import com.melnyk.teammanager.repository.implementation.SkillRepositoryImpl;
 import com.melnyk.teammanager.service.SkillService;
 import com.melnyk.teammanager.service.implementation.SkillServiceImpl;
 import com.melnyk.teammanager.view.SkillView;
@@ -9,7 +10,7 @@ import java.util.Scanner;
 
 public class SkillController {
     private SkillView skillView = new SkillView();
-    private SkillService skillService = new SkillServiceImpl();
+    private SkillService skillService = new SkillServiceImpl(new SkillRepositoryImpl());
     Scanner scan = new Scanner(System.in);
 
     public void execute() {

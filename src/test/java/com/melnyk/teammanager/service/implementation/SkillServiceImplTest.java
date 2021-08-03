@@ -2,9 +2,7 @@ package com.melnyk.teammanager.service.implementation;
 
 import com.melnyk.teammanager.model.Skill;
 import com.melnyk.teammanager.repository.SkillRepository;
-import com.melnyk.teammanager.repository.implementation.SkillRepositoryImpl;
 import com.melnyk.teammanager.service.SkillService;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
@@ -23,67 +21,69 @@ public class SkillServiceImplTest {
 
     @Mock
     private SkillRepository skillRep;
+    @InjectMocks
+    private SkillServiceImpl skillSer;
 
     @Test
     public void ifSkillNotExists() {
         Skill skill = new Skill();
         skill.setId(1);
 
-        given(skillRep.getById(1)).willReturn(skill);
+        given(skillSer.getSkill(1)).willReturn(skill);
 
-        skill = skillRep.getById(1);
+        skill = skillSer.getSkill(1);
 
         assertNotNull(skill);
 
-        verify(skillRep).getById(1);
+        verify(skillSer).getSkill(1);
     }
 
     @Test
     public void ifSkillExists() {
-        given(skillRep.getById(1)).willReturn(null);
+        given(skillSer.getSkill(1)).willReturn(null);
 
-        Skill skill = skillRep.getById(1);
+        Skill skill = skillSer.getSkill(1);
 
         assertNull(skill);
 
-        verify(skillRep).getById(1);
+        verify(skillSer).getSkill(1);
     }
 
     @Test
     public void saveSkill() {
         Skill skill = new Skill();
 
-        given(skillRep.add(skill)).willReturn(true);
+        given(skillSer.saveSkill(skill)).willReturn(skill);
 
-        boolean isSkillAdded = skillRep.add(skill);
+        skill = skillSer.saveSkill(skill);
 
-        assertTrue(isSkillAdded);
+        assertNotNull(skill);
 
-        verify(skillRep).add(skill);
+        verify(skillSer).saveSkill(skill);
     }
 
     @Test
     public void updateSkill() {
         Skill skill = new Skill();
 
-        given(skillRep.update(skill)).willReturn(true);
+        given(skillSer.updateSkill(skill)).willReturn(skill);
 
-        boolean isSkillUpdated = skillRep.update(skill);
+        skill = skillSer.updateSkill(skill);
 
-        assertTrue(isSkillUpdated);
+        assertNotNull(skill);
 
-        verify(skillRep).update(skill);
+        verify(skillSer).updateSkill(skill);
     }
 
     @Test
     public void removeById() {
-        given(skillRep.removeById(1)).willReturn(true);
+        given(skillSer.removeSkill(1)).willReturn(true);
 
-        boolean isSkillRemoved = skillRep.removeById(1);
+        boolean isSkillRemoved = skillSer.removeSkill(1);
 
         assertTrue(isSkillRemoved);
 
-        verify(skillRep).removeById(1);
+        verify(skillSer).removeSkill(1);
     }
 
     @Test
@@ -93,18 +93,18 @@ public class SkillServiceImplTest {
                 new Skill("Hiber")
         );
 
-        given(skillRep.getAll()).willReturn(skills);
+        given(skillSer.getAllSkills()).willReturn(skills);
 
-        List<Skill> returnedList = skillRep.getAll();
+        List<Skill> returnedList = skillSer.getAllSkills();
 
         assertEquals(returnedList, skills);
     }
 
     @Test
     public void ifGetEmptyList() {
-        given(skillRep.getAll()).willReturn(new ArrayList<>());
+        given(skillSer.getAllSkills()).willReturn(new ArrayList<>());
 
-        List<Skill> skillList = skillRep.getAll();
+        List<Skill> skillList = skillSer.getAllSkills();
 
         assertEquals(skillList, new ArrayList<>());
     }

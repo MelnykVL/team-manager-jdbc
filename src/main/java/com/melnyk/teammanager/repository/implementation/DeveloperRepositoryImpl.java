@@ -37,8 +37,7 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
         Team team;
         Skill skill;
 
-        try (Connection con = ConnectionDB.getConnection();
-             PreparedStatement statement = con.prepareStatement(SQL_SELECT_DEVELOPER_BY_ID)) {
+        try (PreparedStatement statement = ConnectionDB.getPrepareStatement(SQL_SELECT_DEVELOPER_BY_ID)) {
 
             statement.setInt(1, integer);
             ResultSet result = statement.executeQuery();
@@ -65,7 +64,6 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
                     skill.setId(result.getInt("skills.skill_id"));
                     skill.setName(result.getString("skills.name"));
                     developer.addSkill(skill);
-//                    skill.addDeveloper(developer);
 
                     result.next();
                 }
@@ -80,11 +78,8 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
     }
 
     @Override
-    public boolean add(Developer developer) {
-        boolean status = false;
-
-        try (Connection con = ConnectionDB.getConnection();
-             PreparedStatement statement = con.prepareStatement(SQL_SAVE_DEVELOPER)) {
+    public Developer add(Developer developer) {
+        try (PreparedStatement statement = ConnectionDB.getPrepareStatement(SQL_SAVE_DEVELOPER, Statement.RETURN_GENERATED_KEYS)) {
 
             statement.setString(1, developer.getFirstName());
             statement.setString(2, developer.getLastName());
@@ -93,20 +88,26 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
             else
                 statement.setNull(3, Types.NULL);
 
-            status = statement.execute();
+            statement.execute();
+
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    developer.setId(generatedKeys.getInt(1));
+                }
+                else {
+                    throw new SQLException("Не удалось создать разработчика.");
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return status;
+        return developer;
     }
 
     @Override
-    public boolean update(Developer developer) {
-        boolean status = false;
-
-        try (Connection con = ConnectionDB.getConnection();
-             PreparedStatement statement = con.prepareStatement(SQL_UPDATE_DEVELOPER)) {
+    public Developer update(Developer developer) {
+        try (PreparedStatement statement = ConnectionDB.getPrepareStatement(SQL_UPDATE_DEVELOPER)) {
 
             statement.setString(1, developer.getFirstName());
             statement.setString(2, developer.getLastName());
@@ -116,20 +117,19 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
                 statement.setNull(3, Types.NULL);
             statement.setInt(4, developer.getId());
 
-            status = statement.execute();
+            statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return status;
+        return developer;
     }
 
     @Override
     public boolean removeById(Integer integer) {
         boolean status = false;
 
-        try (Connection con = ConnectionDB.getConnection();
-             PreparedStatement statement = con.prepareStatement(SQL_DELETE_DEVELOPER)) {
+        try (PreparedStatement statement = ConnectionDB.getPrepareStatement(SQL_DELETE_DEVELOPER)) {
 
             statement.setInt(1, integer);
 
@@ -145,8 +145,7 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
     public List<Developer> getAll() {
         List<Developer> developers = new ArrayList<>();
 
-        try (Connection con = ConnectionDB.getConnection();
-             PreparedStatement statement = con.prepareStatement(SQL_SELECT_ALL_DEVELOPERS, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
+        try (PreparedStatement statement = ConnectionDB.getPrepareStatement(SQL_SELECT_ALL_DEVELOPERS, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
 
             ResultSet result = statement.executeQuery();
             Team team;
@@ -167,7 +166,6 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
                     team.setTeamStatus(TeamStatus.valueOf((String) result.getObject("team_status")));
 
                     dev.setTeam(team);
-//                    team.addDeveloper(dev);
                 }
 
                 if (result.getObject("skills.skill_id") != null) {
@@ -179,7 +177,6 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
                         skill.setName(result.getString("skills.name"));
 
                         dev.addSkill(skill);
-//                    skill.addDeveloper(dev);
 
                         result.next();
                     }
@@ -187,7 +184,6 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
                 }
 
                 developers.add(dev);
-//                result.previous();
             }
 
             result.close();

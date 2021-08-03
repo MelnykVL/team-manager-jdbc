@@ -1,13 +1,14 @@
 package com.melnyk.teammanager.view;
 
 import com.melnyk.teammanager.model.Skill;
+import com.melnyk.teammanager.repository.implementation.SkillRepositoryImpl;
 import com.melnyk.teammanager.service.SkillService;
 import com.melnyk.teammanager.service.implementation.SkillServiceImpl;
 
 import java.util.List;
 
 public class SkillView {
-    private SkillService skillService = new SkillServiceImpl();
+    private SkillService skillService = new SkillServiceImpl(new SkillRepositoryImpl());
 
     public void showListOfCommands() {
         System.out.println("\n|----Робота со списком навыков----|".toUpperCase());
