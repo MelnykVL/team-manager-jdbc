@@ -2,7 +2,6 @@ package com.melnyk.teammanager.service.implementation;
 
 import com.melnyk.teammanager.model.Skill;
 import com.melnyk.teammanager.repository.SkillRepository;
-import com.melnyk.teammanager.service.SkillService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
